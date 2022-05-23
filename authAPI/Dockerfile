@@ -1,12 +1,15 @@
-FROM node:16
+FROM node:16-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package*.json ./
 
-RUN npm install
+COPY --chown=node:node ./package* ./
 
-COPY . .
+RUN npm ci --production
 
-EXPOSE 80
+COPY --chown=node:node ./*.js ./
+
+USER node
+EXPOSE 3000
+
 CMD [ "node", "index.js" ]
