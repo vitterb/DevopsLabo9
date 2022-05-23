@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  authAPI:
+    image: node:alpine
+    build: ./chat-base-app/authAPI
+    ports:
+      - "100:3000"
+  
+  chatAPI:
+    image: node:alpine
+    build: ./chat-base-app/chatAPI
+    ports:
+      - "110:3000"
+  
+  HTML:
+    image: node: alpine
+    volumes:
+      - /usr/share/nginx/html/index.html:/chat-base-app/frontend/index.html
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - /etc/nginx/nginx.conf:/chat-base-app/nginx.conf:ro
+    ports: "80:5000"
+    
+mongodb:
+  image: mongo:latest
+  ports:
+    - "27017:27017"
+  volumes:
+    - /home/pi/kist/ci-infrastructure/mongodb:/data/db 
+  environment:
+    MONGO_INITDB_DATABASE: Data
+  restart: always   
